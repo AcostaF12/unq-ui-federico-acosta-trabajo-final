@@ -7,16 +7,30 @@ const initializeBoard = () => {
 };
 
 const App = () => {
-  const [board, setBoard] = useState(initializeBoard);
+  const [myBoard, setMyBoard] = useState(initializeBoard);
+  const [enemyBoard, setEnemyBoard] = useState(initializeBoard);
 
-  const handleClick = (row, col) => {
-    // TODO: Implementar logica clickear celdas.
+  const handleMyBoardClick = (row, col) => {
+    // TODO: Implementar logica clickear .
+  };
+
+  const handleEnemyBoardClick = (row, col) => {
+    // TODO: Implementar logica clickear.
   };
 
   return (
-    <div className="App">
-      <h1>Battleship Game</h1>
-      <Board board={board} onClick={handleClick} />
+    <div>
+      <h1 className="mainTitle-text">Battleship Game</h1>
+      <div className="boards-container">
+        <div className="board-column">
+          <h2 className="secondaryTitle-text secondaryTitle-text-myBoard">My Board</h2>
+          <Board cells={myBoard} onClick={handleMyBoardClick} isMyBoard={true} />
+        </div>
+        <div className="board-column">
+          <h2 className="secondaryTitle-text secondaryTitle-text-enemyBoard">Enemy Board</h2>
+          <Board cells={enemyBoard} onClick={handleEnemyBoardClick} isMyBoard={false} />
+        </div>
+      </div>
     </div>
   );
 };

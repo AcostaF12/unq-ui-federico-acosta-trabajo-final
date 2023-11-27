@@ -1,3 +1,13 @@
+.boards-container {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.board-column {
+  text-align: center;
+  margin: 20px;
+}
+
 .board {
   display: grid;
   grid-template-columns: repeat(10, 50px);

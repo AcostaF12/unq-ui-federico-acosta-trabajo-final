@@ -5,10 +5,25 @@
   text-align: center;
 }
 
-.app-mainTitle {
+.mainTitle-text {
   font-size: 3rem;
   font-weight: 700;
   margin-bottom: 2rem;
+}
+
+.secondaryTitle-text {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  color: cornflowerblue;
+}
+
+.secondaryTitle-text-myBoard {
+  color: cornflowerblue;
+}
+
+.secondaryTitle-text-enemyBoard {
+  color: #A52A2A;
 }
 
 @media (prefers-reduced-motion: no-preference) {
