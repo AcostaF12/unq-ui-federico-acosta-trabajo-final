@@ -21,7 +21,7 @@ export const Board = ({ cells, onClick, isMyBoard, ships }) => {
             <Cell
               key={colIndex}
               value={cell}
-              onClick={() => onClick(rowIndex, colIndex)}
+              onClick={() => onClick(rowIndex, colIndex, selectedShip, selectedOrientation)}
               isShip={isMyBoard ? getShipType(rowIndex, colIndex) !== null : false}
             />
           ))}

@@ -17,22 +17,28 @@ const App = () => {
     submarine: { length: 3, positions: [], isSunk: false },
     boat: { length: 2, positions: [], isSunk: false },
   });
-
   const [selectedShip, setSelectedShip] = useState(null);
+  const [selectedOrientation, setSelectedOrientation] = useState("horizontal");
+
+  const handleShipSelection = (shipType) => {
+    setSelectedShip(shipType);
+  };
+
+  const handleOrientationChange = (orientation) => {
+    setSelectedOrientation(orientation);
+  };
 
   const handleMyBoardClick = (row, col) => {
     if (selectedShip) {
       const { length, positions } = ships[selectedShip];
 
-      // Verificar si es posible colocar el barco en la posición seleccionada
-      if (isValidShipPlacement(myBoard, row, col, length, "horizontal")) {
-        // Actualizar el estado del barco con la nueva posición
+      if (isValidShipPlacement(myBoard, row, col, length, selectedOrientation)) {
         const updatedShips = { ...ships };
         updatedShips[selectedShip].positions = calculateShipPositions(
           row,
           col,
           length,
-          "horizontal"
+          selectedOrientation
         );
         setShips(updatedShips);
 
@@ -43,7 +49,7 @@ const App = () => {
           row,
           col,
           length,
-          "horizontal"
+          selectedOrientation
         );
         setMyBoard(updatedBoard);
       }
@@ -64,10 +70,6 @@ const App = () => {
 
   const handleEnemyBoardClick = (row, col) => {
     // TODO: Implementar logica atacar.
-  };
-
-  const handleShipSelection = (shipType) => {
-    setSelectedShip(shipType);
   };
 
   return (
@@ -96,7 +98,7 @@ const App = () => {
           />
         </div>
       </div>
-      <ShipSelectionMenu onSelect={handleShipSelection} />
+      <ShipSelectionMenu onSelect={handleShipSelection} onChangeOrientation={handleOrientationChange} />
     </div>
   );
 };
