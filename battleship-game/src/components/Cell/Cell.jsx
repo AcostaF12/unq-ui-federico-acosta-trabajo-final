@@ -1,10 +1,12 @@
 import "./Cell.css"
 
-export const Cell = ({ value, onClick }) => {
-
+export const Cell = ({ value, onClick, isShip }) => {
   return (
-    <button className="board-cell" onClick={onClick}>
+    <div
+      className={`cell ${isShip ? 'ship-cell' : ''}`}
+      onClick={onClick}
+    >
       {value}
-    </button>
+    </div>
   );
 };
