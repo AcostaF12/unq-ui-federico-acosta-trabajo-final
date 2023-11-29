@@ -1,36 +1,27 @@
-.ship-selection-menu {
-  background-color: gray;
-  border: 1px solid #ccc;
-  padding: 10px;
-  border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.ship-selection-menu h3 {
-  font-size: 18px;
-  margin-bottom: 10px;
-}
-
-.ship-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
 .ship-list-item {
   cursor: pointer;
   padding: 8px;
   margin: 5px;
   border: 1px solid #ddd;
   border-radius: 3px;
-  transition: background-color 0.9s;
+  transition: background-color 0.3s;
+  display: flex; 
+  align-items: center; 
 }
 
 .ship-list-item:hover {
-  background-color: darkgray;
+  background-color: #e0e0e0;
 }
 
 .ship-list-item.selected {
   background-color: #3498db;
-  color: #fff; 
+  color: #fff;
+}
+
+.ship-image {
+  width: 20px; 
+  height: 20px;
+  margin-right: 8px;
+  background-size: cover;
+  background-position: center;
 }
