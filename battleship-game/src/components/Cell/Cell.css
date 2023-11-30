@@ -16,6 +16,7 @@
   filter: brightness(1.5);
 }
 
-.ship-cell {
+.cell-ship {
+  background-image: none;
   background-color: #8b4513;
 }

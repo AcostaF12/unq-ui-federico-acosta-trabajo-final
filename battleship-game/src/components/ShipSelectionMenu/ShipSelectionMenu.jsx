@@ -6,9 +6,9 @@ import battleshipCruiserImage from '../../assets/battleship-cruiser-image.jpg';
 import battleshipSubmarineImage from '../../assets/battleship-submarine-image.png';
 import battleshipBoatImage from '../../assets/battleship-boat-image.jpeg';
 
-export const ShipSelectionMenu = ({ onSelect, onChangeOrientation }) => {
-  const [selectedShip, setSelectedShip] = useState(null);
-  const [selectedOrientation, setSelectedOrientation] = useState("horizontal");
+export const ShipSelectionMenu = ({ onSelectShip, onSelectOrientation }) => {
+  const [selectedShip, setSelectedShip] = useState('None');
+  const [selectedOrientation, setSelectedOrientation] = useState('None');
 
   const shipTypes = [
     { type: 'Carrier (5 cells)', image: battleshipCarrierImage, length: 5 },
@@ -20,23 +20,22 @@ export const ShipSelectionMenu = ({ onSelect, onChangeOrientation }) => {
   return (
     <div className="ship-selection-container">
       <div className="ship-selection-menu">
-    <div className="ship-selection-menu">
       <h3>Select a Ship:</h3>
       <div className="orientation-buttons">
         <button
-          className={`orientation-button ${selectedOrientation === 'horizontal' ? 'selected' : ''}`}
+          className={`orientation-button ${selectedOrientation === 'Horizontal' ? 'selected' : ''}`}
           onClick={() => {
-            setSelectedOrientation('horizontal');
-            onChangeOrientation('horizontal');
+            setSelectedOrientation('Horizontal');
+            onSelectOrientation('Horizontal');
           }}
         >
           Horizontal
         </button>
         <button
-          className={`orientation-button ${selectedOrientation === 'vertical' ? 'selected' : ''}`}
+          className={`orientation-button ${selectedOrientation === 'Vertical' ? 'selected' : ''}`}
           onClick={() => {
-            setSelectedOrientation('vertical');
-            onChangeOrientation('vertical');
+            setSelectedOrientation('Vertical');
+            onSelectOrientation('Vertical');
           }}
         >
           Vertical
@@ -49,7 +48,7 @@ export const ShipSelectionMenu = ({ onSelect, onChangeOrientation }) => {
             className={`ship-list-item ${selectedShip === ship.type ? 'selected' : ''}`}
             onClick={() => {
               setSelectedShip(ship.type);
-              onSelect({ type: ship.type, orientation: selectedOrientation });
+              onSelectShip({ type: ship.type, length: ship.length, orientation: selectedOrientation });
             }}
           >
             <div
@@ -60,8 +59,7 @@ export const ShipSelectionMenu = ({ onSelect, onChangeOrientation }) => {
           </li>
         ))}
       </ul>
-    </div>
-    </div>
+      </div>
     </div>
   );  
 };
