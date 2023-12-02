@@ -38,8 +38,6 @@ const App = () => {
   };
 
   const validateShipPlacement = (startRow, startCol, length, orientation, board) => {
-    console.log("Entrando a validateShipPlacement");
-
     if (
       startRow < 0 || startRow >= board.length ||
       startCol < 0 || startCol >= board[0].length
