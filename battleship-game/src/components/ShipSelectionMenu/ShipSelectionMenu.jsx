@@ -6,7 +6,7 @@ import battleshipCruiserImage from '../../assets/battleship-cruiser-image.jpg';
 import battleshipSubmarineImage from '../../assets/battleship-submarine-image.png';
 import battleshipBoatImage from '../../assets/battleship-boat-image.jpeg';
 
-export const ShipSelectionMenu = ({ onSelectShip, onSelectOrientation }) => {
+export const ShipSelectionMenu = ({ onSelectShip, onSelectOrientation, placedShips }) => {
   const [selectedShip, setSelectedShip] = useState('None');
   const [selectedOrientation, setSelectedOrientation] = useState('None');
 
@@ -42,15 +42,16 @@ export const ShipSelectionMenu = ({ onSelectShip, onSelectOrientation }) => {
         </button>
       </div>
       <ul className="ship-list">
-        {shipTypes.map((ship) => (
-          <li
-            key={ship.type}
-            className={`ship-list-item ${selectedShip === ship.type ? 'selected' : ''}`}
-            onClick={() => {
-              setSelectedShip(ship.type);
-              onSelectShip({ type: ship.type, length: ship.length, orientation: selectedOrientation });
-            }}
-          >
+          {shipTypes.map((ship) => (
+            <li
+              key={ship.type}
+              className={`ship-list-item ${selectedShip === ship.type ? 'selected' : ''} ${placedShips.includes(ship.type) ? 'disabled' : ''}`}
+              onClick={() => {
+                setSelectedShip(ship.type);
+                onSelectShip({ type: ship.type, length: ship.length, orientation: selectedOrientation });
+              }}
+              disabled={placedShips.includes(ship.type)}
+            >
             <div
               className="ship-image"
               style={{ backgroundImage: `url(${ship.image})` }}

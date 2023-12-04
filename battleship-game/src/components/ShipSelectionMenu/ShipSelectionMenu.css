@@ -22,7 +22,8 @@
 }
 
 .ship-list-item:hover {
-  background-color: #A9A9A9;
+  background-color: #696969;
+
 }
 
 .ship-list-item.selected {
@@ -50,6 +51,17 @@
 }
 
 .orientation-button.selected {
-  background-color: #007bff;
+  background-color: #3498db;
   color: #fff;
+}
+
+.ship-list-item.disabled {
+  filter: brightness(0.5);
+  background-color: transparent;
+  color: #888;
+  cursor: not-allowed;
+}
+
+.ship-list-item.disabled:hover {
+  background-color: transparent;
 }

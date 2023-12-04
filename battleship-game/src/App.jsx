@@ -10,8 +10,9 @@ const initializeBoard = () => {
 const App = () => {
   const [myBoard, setMyBoard] = useState(initializeBoard);
   const [enemyBoard, setEnemyBoard] = useState(initializeBoard);
-  const [selectedShip, setSelectedShip] = useState('None');
-  const [selectedOrientation, setSelectedOrientation] = useState('None');
+  const [selectedShip, setSelectedShip] = useState("None");
+  const [selectedOrientation, setSelectedOrientation] = useState("None");
+  const [placedShips, setPlacedShips] = useState([]);
   const [ships, setShips] = useState({
     carrier: { length: 5, positions: [] },
     cruiser: { length: 4, positions: [] },
@@ -24,30 +25,54 @@ const App = () => {
       const shipType = selectedShip.type;
       const shipLength = selectedShip.length;
       const orientation = selectedOrientation;
-      
-      const isValidPlacement = validateShipPlacement(row, col, shipLength, orientation, myBoard);
-      
-      if (isValidPlacement) {
-        const updatedBoard = updateBoardWithShip(row, col, shipLength, orientation, myBoard);
-        const updatedShips = { ...ships, [shipType]: { ...ships[shipType], positions: updatedBoard.positions } };
-  
+
+      const isValidPlacement = validateShipPlacement(
+        row,
+        col,
+        shipLength,
+        orientation,
+        myBoard
+      );
+
+      if (isValidPlacement && !placedShips.includes(shipType)) {
+        const updatedBoard = updateBoardWithShip(
+          row,
+          col,
+          shipLength,
+          orientation,
+          myBoard
+        );
+        const updatedShips = {
+          ...ships,
+          [shipType]: { ...ships[shipType], positions: updatedBoard.positions },
+        };
+
         setMyBoard(updatedBoard.board);
         setShips(updatedShips);
+        setPlacedShips([...placedShips, shipType]);
       }
     }
   };
 
-  const validateShipPlacement = (startRow, startCol, length, orientation, board) => {
+  const validateShipPlacement = (
+    startRow,
+    startCol,
+    length,
+    orientation,
+    board
+  ) => {
     if (
-      startRow < 0 || startRow >= board.length ||
-      startCol < 0 || startCol >= board[0].length
+      startRow < 0 ||
+      startRow >= board.length ||
+      startCol < 0 ||
+      startCol >= board[0].length
     ) {
       return false;
     }
-  
+
     for (let i = 0; i < length; i++) {
       let newRow, newCol;
-  
+
       if (orientation === "Vertical") {
         newRow = startRow;
         newCol = startCol + i;
@@ -55,29 +80,40 @@ const App = () => {
         newRow = startRow + i;
         newCol = startCol;
       }
-  
-      if (newRow < 0 || newRow >= board.length || newCol < 0 || newCol >= board[0].length) {
+
+      if (
+        newRow < 0 ||
+        newRow >= board.length ||
+        newCol < 0 ||
+        newCol >= board[0].length
+      ) {
         return false;
       }
-  
+
       if (board[newRow][newCol] && board[newRow][newCol].value === "Ship") {
         return false;
       }
     }
-  
+
     return true;
   };
 
-  const updateBoardWithShip = (startRow, startCol, length, orientation, board) => {
+  const updateBoardWithShip = (
+    startRow,
+    startCol,
+    length,
+    orientation,
+    board
+  ) => {
     const newBoard = [...board];
     const positions = [];
-  
+
     if (orientation === "Vertical") {
       for (let i = 0; i < length; i++) {
         const newRow = startRow;
         const newCol = startCol + i;
         positions.push({ row: newRow, col: newCol });
-  
+
         newBoard[newRow][newCol] = { value: "Ship" };
       }
     } else if (orientation === "Horizontal") {
@@ -85,7 +121,7 @@ const App = () => {
         const newRow = startRow + i;
         const newCol = startCol;
         positions.push({ row: newRow, col: newCol });
-  
+
         newBoard[newRow][newCol] = { value: "Ship" };
       }
     }
@@ -125,7 +161,10 @@ const App = () => {
       </div>
       <ShipSelectionMenu
         onSelectShip={(ship) => setSelectedShip(ship)}
-        onSelectOrientation={(orientation) => setSelectedOrientation(orientation)}
+        onSelectOrientation={(orientation) =>
+          setSelectedOrientation(orientation)
+        }
+        placedShips={placedShips}
       />
     </div>
   );
