@@ -161,6 +161,44 @@ const App = () => {
     });
   };
 
+  const handleRandomBoard = () => {
+    let newBoard = initializeBoard();
+    let newPlacedShips = []; 
+    
+    Object.keys(ships).forEach((shipType) => {
+      let isValidPlacement = false;
+      let randomRow, randomCol, randomOrientation;
+  
+      while (!isValidPlacement) {
+        randomRow = getRandomPosition().row;
+        randomCol = getRandomPosition().col;
+        randomOrientation = Math.random() < 0.5 ? "Horizontal" : "Vertical";
+  
+        isValidPlacement = validateShipPlacement(
+          randomRow,
+          randomCol,
+          ships[shipType].length,
+          randomOrientation,
+          newBoard
+        );
+      }
+  
+      const updatedBoard = updateBoardWithShip(
+        randomRow,
+        randomCol,
+        ships[shipType].length,
+        randomOrientation,
+        newBoard
+      );
+  
+      newBoard = updatedBoard.board;
+      newPlacedShips.push(shipType);
+    });  
+  
+    setMyBoard(newBoard); 
+    setPlacedShips(newPlacedShips); 
+  };
+  
   return (
     <div>
       <h1 className="mainTitle-text">Battleship Game</h1>
@@ -195,7 +233,7 @@ const App = () => {
               />
               Reset
             </button>
-            <button className="random-button" onClick={null}>
+            <button className="random-button" onClick={handleRandomBoard(myBoard)}>
               <img
                 src="../src/assets/battleship-randomBoard-icon.png"
                 className="random-icon"
