@@ -6,11 +6,16 @@ export const Board = ({ cells, isMyBoard, onClick }) => {
   const numberSequence = Array.from({ length: 10 }, (_, i) => i + 1);
 
   return (
-    <div>
+    <div className="boards-container">
+      <div className="number-column">
+        {numberSequence.map((number, index) => (
+          <div key={index} className="number-cell">{number}</div>
+        ))}
+      </div>
       <div className={`board ${isMyBoard ? "my-board" : "enemy-board"}`}>
         {cells.map((row, rowIndex) => (
           <div key={rowIndex} className="row">
-            <div className="number-cell">{alphabet[rowIndex]}</div>
+            <div className="letter-cell">{alphabet[rowIndex]}</div>
             {row.map((cell, colIndex) => (
               <Cell
                 key={colIndex}
