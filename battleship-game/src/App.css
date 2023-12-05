@@ -45,3 +45,52 @@
 .ready-button:hover {
   background-color: #45a049;
 }
+
+.button-container {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 15px;
+}
+
+.reset-button {
+  padding: 10px;
+  font-size: 1.2rem;
+  background-color: #d9534f;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.reset-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+}
+
+.reset-button:hover {
+  background-color: #c9302c; 
+}
+
+.random-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+}
+
+.random-button {
+  margin-left: 10px;
+  padding: 10px;
+  font-size: 1.2rem;
+  background-color: #5bc0de; 
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.random-button:hover {
+  background-color: #46b8da;
+}

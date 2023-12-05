@@ -150,6 +150,17 @@ const App = () => {
     return { row, col };
   };
 
+  const handleResetBoard = () => {
+    setMyBoard(initializeBoard());
+    setPlacedShips([]);
+    setShips({
+      carrier: { length: 5, positions: [] },
+      cruiser: { length: 4, positions: [] },
+      submarine: { length: 3, positions: [] },
+      boat: { length: 2, positions: [] },
+    });
+  };
+
   return (
     <div>
       <h1 className="mainTitle-text">Battleship Game</h1>
@@ -169,13 +180,29 @@ const App = () => {
             isMyBoard={true}
             ships={ships}
           />
-           <ShipSelectionMenu
-        onSelectShip={(ship) => setSelectedShip(ship)}
-        onSelectOrientation={(orientation) =>
-          setSelectedOrientation(orientation)
-        }
-        placedShips={placedShips}
-      />
+          <ShipSelectionMenu
+            onSelectShip={(ship) => setSelectedShip(ship)}
+            onSelectOrientation={(orientation) =>
+              setSelectedOrientation(orientation)
+            }
+            placedShips={placedShips}
+          />
+          <div className="button-container">
+            <button className="reset-button" onClick={handleResetBoard}>
+              <img
+                src="../src/assets/battleship-deleteBoard-icon.png"
+                className="reset-icon"
+              />
+              Reset
+            </button>
+            <button className="random-button" onClick={null}>
+              <img
+                src="../src/assets/battleship-randomBoard-icon.png"
+                className="random-icon"
+              />
+              Random
+            </button>
+          </div>
         </div>
         <div className="board-column">
           <h2 className="secondaryTitle-text secondaryTitle-text-enemyBoard">
