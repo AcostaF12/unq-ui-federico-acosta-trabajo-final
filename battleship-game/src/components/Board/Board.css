@@ -19,6 +19,7 @@
 .number-cell {
   height: 50px; 
   width: 30px;
+  cursor: default;
 }
 
 .letter-cell {
@@ -26,4 +27,5 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: default;
 }
