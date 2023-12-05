@@ -27,8 +27,21 @@
   color: #A52A2A;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.board-column {
+  text-align: center;
+  margin: 20px;
+}
+
+.play-button {
+  margin: 10px;
+  padding: 10px;
+  font-size: 1.2rem;
+  background-color: #4caf50;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+.ready-button:hover {
+  background-color: #45a049;
 }

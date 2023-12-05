@@ -1,15 +1,17 @@
 .boards-container {
   display: flex;
-  justify-content: space-evenly;
-}
-
-.board-column {
-  text-align: center;
-  margin: 20px;
+  justify-content: space-between;
 }
 
 .board {
   display: grid;
   grid-template-columns: repeat(10, 50px);
   gap: 0px;
+}
+
+.number-cell {
+  height: 40px; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
