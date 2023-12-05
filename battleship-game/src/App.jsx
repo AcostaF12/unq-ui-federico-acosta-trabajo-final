@@ -4,14 +4,22 @@ import { ShipSelectionMenu } from "./components/ShipSelectionMenu/ShipSelectionM
 import "./App.css";
 
 const initializeBoard = () => {
-  return Array.from({ length: 10 }, () => Array(10).fill(null));
+  return Array.from({ length: 10 }, (_, rowIndex) => {
+    return Array.from({ length: 10 }, (_, colIndex) => {
+      return {
+        row: rowIndex,
+        col: colIndex,
+        value: "Empty",
+      };
+    });
+  });
 };
 
 const App = () => {
   const [myBoard, setMyBoard] = useState(initializeBoard);
   const [enemyBoard, setEnemyBoard] = useState(initializeBoard);
-  const [selectedShip, setSelectedShip] = useState("None");
-  const [selectedOrientation, setSelectedOrientation] = useState("None");
+  const [selectedShip, setSelectedShip] = useState(null);
+  const [selectedOrientation, setSelectedOrientation] = useState(null);
   const [placedShips, setPlacedShips] = useState([]);
   const [ships, setShips] = useState({
     carrier: { length: 5, positions: [] },
@@ -53,6 +61,10 @@ const App = () => {
       }
     }
   };
+
+  function isReady() {
+    return placedShips.length === 4;
+  }
 
   const validateShipPlacement = (
     startRow,
@@ -132,9 +144,20 @@ const App = () => {
     // TODO: Implementar logica atacar.
   };
 
+  const getRandomPosition = () => {
+    const row = Math.floor(Math.random() * 10);
+    const col = Math.floor(Math.random() * 10);
+    return { row, col };
+  };
+
   return (
     <div>
       <h1 className="mainTitle-text">Battleship Game</h1>
+      {isReady() && (
+        <button className="play-button" onClick={null}>
+          Play
+        </button>
+      )}
       <div className="boards-container">
         <div className="board-column">
           <h2 className="secondaryTitle-text secondaryTitle-text-myBoard">
@@ -146,6 +169,13 @@ const App = () => {
             isMyBoard={true}
             ships={ships}
           />
+           <ShipSelectionMenu
+        onSelectShip={(ship) => setSelectedShip(ship)}
+        onSelectOrientation={(orientation) =>
+          setSelectedOrientation(orientation)
+        }
+        placedShips={placedShips}
+      />
         </div>
         <div className="board-column">
           <h2 className="secondaryTitle-text secondaryTitle-text-enemyBoard">
@@ -159,13 +189,6 @@ const App = () => {
           />
         </div>
       </div>
-      <ShipSelectionMenu
-        onSelectShip={(ship) => setSelectedShip(ship)}
-        onSelectOrientation={(orientation) =>
-          setSelectedOrientation(orientation)
-        }
-        placedShips={placedShips}
-      />
     </div>
   );
 };
