@@ -4,11 +4,9 @@ import { ShipSelectionMenu } from "./components/ShipSelectionMenu/ShipSelectionM
 import "./App.css";
 
 const initializeBoard = () => {
-  return Array.from({ length: 10 }, (_, rowIndex) => {
-    return Array.from({ length: 10 }, (_, colIndex) => {
+  return Array.from({ length: 10 }, () => {
+    return Array.from({ length: 10 }, () => {
       return {
-        row: rowIndex,
-        col: colIndex,
         value: "Empty",
       };
     });
@@ -33,6 +31,10 @@ const App = () => {
     boat: { length: 2 },
   };
 
+  function isReady() {
+    return player1Ships.length === 4;
+  }
+
   const handleMyBoardClick = (row, col) => {
     if (selectedShip) {
       const shipType = selectedShip.type;
@@ -47,7 +49,10 @@ const App = () => {
         player1Board
       );
 
-      if (isValidPlacement && !player1Ships.some((ship) => ship.type === shipType)) {
+      if (
+        isValidPlacement &&
+        !player1Ships.some((ship) => ship.type === shipType)
+      ) {
         const updatedBoard = updateBoardWithShip(
           row,
           col,
@@ -56,15 +61,20 @@ const App = () => {
           player1Board
         );
 
-        setPlayer1Board(updatedBoard.board);
-        setPlayer1Ships([...player1Ships, { type: shipType, initialPosition: {col, row}, orientation: selectedOrientation, isSunk: false }]);
+        setPlayer1Board(updatedBoard);
+        setPlayer1Ships([
+          ...player1Ships,
+          {
+            type: shipType,
+            initialPosition: { row: col, col: row },
+            length: shipLength,
+            orientation: selectedOrientation,
+            isSunk: false,
+          },
+        ]);
       }
     }
   };
-
-  function isReady() {
-    return player1Ships.length === 4;
-  }
 
   const validateShipPlacement = (
     startRow,
@@ -118,13 +128,11 @@ const App = () => {
     board
   ) => {
     const newBoard = [...board];
-    const positions = [];
 
     if (orientation === "Vertical") {
       for (let i = 0; i < length; i++) {
         const newRow = startRow;
         const newCol = startCol + i;
-        positions.push({ row: newRow, col: newCol });
 
         newBoard[newRow][newCol] = { value: "Ship" };
       }
@@ -132,23 +140,27 @@ const App = () => {
       for (let i = 0; i < length; i++) {
         const newRow = startRow + i;
         const newCol = startCol;
-        positions.push({ row: newRow, col: newCol });
 
         newBoard[newRow][newCol] = { value: "Ship" };
       }
     }
-    return { board: newBoard, positions };
+    return newBoard;
   };
 
   const handleEnemyBoardClick = (row, col) => {
     if (gameHasStarted) {
-      const isHit = player2Board[row][col].value === "Ship";
+      const cellValue = player2Board[row][col].value;
+      const isHit = cellValue === "Ship";
+
       const newBoard = [...player2Board];
       newBoard[row][col].value = isHit ? "Hit" : "Miss";
       setPlayer2Board(newBoard);
 
       if (isHit) {
         const ship = player2Ships.find((ship) => {
+          console.log("Ship in handleEnemyBoardClick", ship);
+          console.log("Col in handleEnemyBoardClick", col);
+          console.log("Row in handleEnemyBoardClick", row);
           if (ship.orientation === "Vertical") {
             return (
               ship.initialPosition.col === col &&
@@ -166,22 +178,22 @@ const App = () => {
 
         const isSunk = checkIfShipIsSunk(ship, newBoard);
         if (isSunk) {
-          const newShips = player2Ships.map((ship) => {
-            if (ship.type === ship.type) {
-              return { ...ship, isSunk: true };
-            } else {
-              return ship;
-            }
+          const updatedBoard = markShipAsSunk(ship, newBoard);
+          setPlayer2Board(updatedBoard);
+          const newShips = player2Ships.map((shipItem) => {
+            return shipItem.type === ship.type
+              ? { ...shipItem, isSunk: true }
+              : shipItem;
           });
           setPlayer2Ships(newShips);
         }
       }
     }
-  }
+  };
 
   const checkIfShipIsSunk = (ship, board) => {
     if (ship.orientation === "Vertical") {
-      for (let i = 0; i < ship.type.length; i++) {
+      for (let i = 0; i < ship.length; i++) {
         const newRow = ship.initialPosition.row + i;
         const newCol = ship.initialPosition.col;
 
@@ -190,7 +202,7 @@ const App = () => {
         }
       }
     } else if (ship.orientation === "Horizontal") {
-      for (let i = 0; i < ship.type.length; i++) {
+      for (let i = 0; i < ship.length; i++) {
         const newRow = ship.initialPosition.row;
         const newCol = ship.initialPosition.col + i;
 
@@ -200,20 +212,40 @@ const App = () => {
       }
     }
     return true;
-  }
+  };
+
+  const markShipAsSunk = (ship, board) => {
+    const updatedBoard = [...board];
+  
+    if (ship.orientation === "Vertical") {
+      for (let i = 0; i < ship.type.length; i++) {
+        const newRow = ship.initialPosition.row + i;
+        const newCol = ship.initialPosition.col;
+        updatedBoard[newCol][newRow].value = "Sunk";
+      }
+    } else if (ship.orientation === "Horizontal") {
+      for (let i = 0; i < ship.type.length; i++) {
+        const newRow = ship.initialPosition.row;
+        const newCol = ship.initialPosition.col + i;
+        updatedBoard[newCol][newRow].value = "Sunk";
+      }
+    }
+    
+    return updatedBoard;
+  };
 
   const placeRandomShips = (board) => {
     const placedShips = [];
-  
+
     Object.keys(ships).forEach((shipType) => {
       let isValidPlacement = false;
       let randomRow, randomCol, randomOrientation;
-  
+
       while (!isValidPlacement) {
         randomRow = getRandomPosition().row;
         randomCol = getRandomPosition().col;
-        randomOrientation = Math.random() < 0.5 ? "Horizontal" : "Vertical";
-  
+        randomOrientation = Math.random() < 0.5 ? "Vertical" : "Horizontal";
+
         isValidPlacement = validateShipPlacement(
           randomRow,
           randomCol,
@@ -222,7 +254,6 @@ const App = () => {
           board
         );
       }
-  
       const updatedBoard = updateBoardWithShip(
         randomRow,
         randomCol,
@@ -230,26 +261,26 @@ const App = () => {
         randomOrientation,
         board
       );
-  
-      board = updatedBoard.board;
-  
+
+      board = updatedBoard;
+
       placedShips.push({
         type: shipType,
-        initialPosition: { col: randomCol, row: randomRow },
+        length: ships[shipType].length,
+        initialPosition: { row: randomCol, col: randomRow },
         orientation: randomOrientation,
         isSunk: false,
       });
     });
-  
     return { board, placedShips };
   };
-  
+
   const handlePlayer1RandomBoard = () => {
     const { board, placedShips } = placeRandomShips(initializeBoard());
     setPlayer1Board(board);
     setPlayer1Ships(placedShips);
   };
-  
+
   const handlePlayer2RandomBoard = () => {
     const { board, placedShips } = placeRandomShips(initializeBoard());
     setPlayer2Board(board);
@@ -309,7 +340,10 @@ const App = () => {
               />
               Reset
             </button>
-            <button className="random-button" onClick={handlePlayer1RandomBoard}>
+            <button
+              className="random-button"
+              onClick={handlePlayer1RandomBoard}
+            >
               <img
                 src="../src/assets/battleship-randomBoard-icon.png"
                 className="random-icon"
