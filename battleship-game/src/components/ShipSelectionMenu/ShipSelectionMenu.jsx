@@ -17,9 +17,6 @@ export const ShipSelectionMenu = ({ onSelectShip, onSelectOrientation, placedShi
     { type: 'boat', image: battleshipBoatImage, length: 2, description: "Boat (2 Cells)" },
   ];
 
-
-  console.log("Placed ship selector: ", placedShips);
-
   return (
     <div className="ship-selection-container">
       <div className="ship-selection-menu">
