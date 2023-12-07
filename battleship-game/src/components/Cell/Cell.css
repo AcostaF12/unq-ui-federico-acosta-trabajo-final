@@ -6,17 +6,38 @@
   align-items: center;
   justify-content: center;
   font-size: 1.2em;
-  cursor: pointer;
   background-image: url('../../assets/battleship-game-waterTexture.jpeg'); 
   background-size: cover;
-  transition: filter 0.3s ease;
 }
 
-.cell:hover {
-  filter: brightness(1.5);
+.cell-notHit {
+  transition: filter 0.3s ease;
+  cursor: pointer;
+}
+
+.cell-notHit:hover {
+  filter: brightness(1.3);
 }
 
 .cell-ship {
   background-image: none;
   background-color: #8b4513;
+}
+
+.cell-miss {
+  filter: brightness(0.5);
+  cursor: not-allowed; 
+}
+
+.cell-hit {
+  background-image: url('../../assets/battleship-shipHitted-cell-icon.jpeg'); 
+  background-size: cover;
+  cursor: not-allowed; 
+}
+
+.hit-icon {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.8;
 }

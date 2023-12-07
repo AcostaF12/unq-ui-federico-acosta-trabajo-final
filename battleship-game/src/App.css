@@ -84,7 +84,7 @@
   margin-left: 10px;
   padding: 10px;
   font-size: 1.2rem;
-  background-color: #5bc0de; 
+  background-color: #6699CC; 
   color: #fff;
   border: none;
   cursor: pointer;
@@ -93,5 +93,5 @@
 }
 
 .random-button:hover {
-  background-color: #46b8da;
+  background-color: #4B9CD3;
 }

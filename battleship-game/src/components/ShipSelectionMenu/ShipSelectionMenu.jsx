@@ -11,11 +11,14 @@ export const ShipSelectionMenu = ({ onSelectShip, onSelectOrientation, placedShi
   const [selectedOrientation, setSelectedOrientation] = useState('None');
 
   const shipTypes = [
-    { type: 'Carrier (5 cells)', image: battleshipCarrierImage, length: 5 },
-    { type: 'Cruiser (4 cells)', image: battleshipCruiserImage, length: 4 },
-    { type: 'Submarine (3 cells)', image: battleshipSubmarineImage, length: 3 },
-    { type: 'Boat (2 cells)', image: battleshipBoatImage, length: 2 },
+    { type: 'carrier', image: battleshipCarrierImage, length: 5, description: "Carrier (5 Cells)" },
+    { type: 'cruiser', image: battleshipCruiserImage, length: 4, description: "Cruiser (4 Cells)" },
+    { type: 'submarine', image: battleshipSubmarineImage, length: 3, description: "Submarine (3 Cells)" },
+    { type: 'boat', image: battleshipBoatImage, length: 2, description: "Boat (2 Cells)" },
   ];
+
+
+  console.log("Placed ship selector: ", placedShips);
 
   return (
     <div className="ship-selection-container">
@@ -44,19 +47,20 @@ export const ShipSelectionMenu = ({ onSelectShip, onSelectOrientation, placedShi
       <ul className="ship-list">
           {shipTypes.map((ship) => (
             <li
-              key={ship.type}
-              className={`ship-list-item ${selectedShip === ship.type ? 'selected' : ''} ${placedShips.includes(ship.type) ? 'disabled' : ''}`}
+            key={ship.type}
+            className={`ship-list-item ${selectedShip === ship.type ? 'selected' : ''} ${
+              placedShips.some((placedShip) => placedShip.type === ship.type) ? 'disabled' : ''
+            }`}
               onClick={() => {
                 setSelectedShip(ship.type);
                 onSelectShip({ type: ship.type, length: ship.length, orientation: selectedOrientation });
               }}
-              disabled={placedShips.includes(ship.type)}
             >
             <div
               className="ship-image"
               style={{ backgroundImage: `url(${ship.image})` }}
             ></div>
-            {ship.type}
+            {ship.description}
           </li>
         ))}
       </ul>
