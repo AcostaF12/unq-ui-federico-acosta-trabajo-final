@@ -77,3 +77,54 @@ ul.ship-list {
 .ship-list-item.disabled:hover {
   background-color: transparent;
 }
+
+.button-container {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 15px;
+}
+
+.reset-button {
+  padding: 10px;
+  font-size: 1.2rem;
+  background-color: #d9534f;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: all 0.3s ease 0s;
+}
+
+.reset-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+}
+
+.reset-button:hover {
+  background-color: #c9302c; 
+}
+
+.random-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+}
+
+.random-button {
+  margin-left: 10px;
+  padding: 10px;
+  font-size: 1.2rem;
+  background-color: #6699CC; 
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: all 0.3s ease 0s;
+}
+
+.random-button:hover {
+  background-color: #5a8cb0; 
+}

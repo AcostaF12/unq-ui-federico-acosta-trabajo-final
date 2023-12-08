@@ -35,63 +35,18 @@
 
 .play-button {
   margin: 10px;
-  padding: 10px;
-  font-size: 1.2rem;
+  padding-left: 30px;
+  padding-right: 30px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  font-size: 1.3rem;
   background-color: #4caf50;
   color: #fff;
   border: none;
   cursor: pointer;
+  transition: all 0.3s ease 0s;
 }
 
-.ready-button:hover {
-  background-color: #45a049;
-}
-
-.button-container {
-  display: flex;
-  justify-content: flex-start;
-  margin-top: 15px;
-}
-
-.reset-button {
-  padding: 10px;
-  font-size: 1.2rem;
-  background-color: #d9534f;
-  color: #fff;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-}
-
-.reset-icon {
-  width: 20px;
-  height: 20px;
-  margin-right: 8px;
-}
-
-.reset-button:hover {
-  background-color: #c9302c; 
-}
-
-.random-icon {
-  width: 20px;
-  height: 20px;
-  margin-right: 8px;
-}
-
-.random-button {
-  margin-left: 10px;
-  padding: 10px;
-  font-size: 1.2rem;
-  background-color: #6699CC; 
-  color: #fff;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-}
-
-.random-button:hover {
-  background-color: #4B9CD3;
+.play-button:hover {
+  background-color: #3e8e41;
 }
