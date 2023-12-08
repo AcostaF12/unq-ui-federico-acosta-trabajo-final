@@ -17,7 +17,7 @@ export const Cell = ({ value, onClick }) => {
   };
 
   const handleClick = () => {
-    if (!isMiss && !isHit) {
+    if (!isMiss && !isHit && !isSunk) {
       onClick();
     }
   };

@@ -7,6 +7,7 @@
   display: grid;
   grid-template-columns: repeat(10, 50px);
   gap: 0px;
+  filter: brightness(1);
 }
 
 .number-column {
@@ -28,4 +29,9 @@
   align-items: center;
   justify-content: center;
   cursor: default;
+}
+
+.boards-container.inactive-board {
+  filter: brightness(0.7);
+  pointer-events: none; 
 }

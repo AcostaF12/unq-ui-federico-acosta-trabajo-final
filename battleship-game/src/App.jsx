@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Board } from "./components/Board/Board";
 import { ShipSelectionMenu } from "./components/ShipSelectionMenu/ShipSelectionMenu";
 import "./App.css";
@@ -19,6 +19,9 @@ const App = () => {
   const [player1Ships, setPlayer1Ships] = useState([]);
   const [player2Ships, setPlayer2Ships] = useState([]);
 
+  const [player1Turn, setPlayer1Turn] = useState(false);
+  const [player2Turn, setPlayer2Turn] = useState(false);
+
   const [selectedShip, setSelectedShip] = useState(null);
   const [selectedOrientation, setSelectedOrientation] = useState(null);
 
@@ -31,12 +34,18 @@ const App = () => {
     boat: { length: 2 },
   };
 
+  useEffect(() => {
+    setTimeout(() => {
+      handleComputerAttack();
+    }, 1800);
+  }, [player2Turn]); 
+
   function isReady() {
     return player1Ships.length === 4;
   }
 
   const handleMyBoardClick = (row, col) => {
-    if (selectedShip) {
+    if (selectedShip && selectedOrientation) {
       const shipType = selectedShip.type;
       const shipLength = selectedShip.length;
       const orientation = selectedOrientation;
@@ -66,7 +75,7 @@ const App = () => {
           ...player1Ships,
           {
             type: shipType,
-            initialPosition: { row: col, col: row },
+            initialPosition: { row: row, col: col },
             length: shipLength,
             orientation: selectedOrientation,
             isSunk: false,
@@ -148,91 +157,36 @@ const App = () => {
   };
 
   const handleEnemyBoardClick = (row, col) => {
-    if (gameHasStarted) {
-      const cellValue = player2Board[row][col].value;
-      const isHit = cellValue === "Ship";
-
-      const newBoard = [...player2Board];
-      newBoard[row][col].value = isHit ? "Hit" : "Miss";
+    if (gameHasStarted && player1Turn) {
+      const newBoard = handleAttack(player2Board, row, col);
       setPlayer2Board(newBoard);
-
-      if (isHit) {
-        const ship = player2Ships.find((ship) => {
-          console.log("Ship in handleEnemyBoardClick", ship);
-          console.log("Col in handleEnemyBoardClick", col);
-          console.log("Row in handleEnemyBoardClick", row);
-          if (ship.orientation === "Vertical") {
-            return (
-              ship.initialPosition.col === col &&
-              ship.initialPosition.row <= row &&
-              ship.initialPosition.row + ship.type.length - 1 >= row
-            );
-          } else if (ship.orientation === "Horizontal") {
-            return (
-              ship.initialPosition.row === row &&
-              ship.initialPosition.col <= col &&
-              ship.initialPosition.col + ship.type.length - 1 >= col
-            );
-          }
-        });
-
-        const isSunk = checkIfShipIsSunk(ship, newBoard);
-        if (isSunk) {
-          const updatedBoard = markShipAsSunk(ship, newBoard);
-          setPlayer2Board(updatedBoard);
-          const newShips = player2Ships.map((shipItem) => {
-            return shipItem.type === ship.type
-              ? { ...shipItem, isSunk: true }
-              : shipItem;
-          });
-          setPlayer2Ships(newShips);
-        }
-      }
+      setPlayer1Turn(false);
+      setPlayer2Turn(true);
     }
   };
 
-  const checkIfShipIsSunk = (ship, board) => {
-    if (ship.orientation === "Vertical") {
-      for (let i = 0; i < ship.length; i++) {
-        const newRow = ship.initialPosition.row + i;
-        const newCol = ship.initialPosition.col;
-
-        if (board[newRow][newCol].value !== "Hit") {
-          return false;
-        }
-      }
-    } else if (ship.orientation === "Horizontal") {
-      for (let i = 0; i < ship.length; i++) {
-        const newRow = ship.initialPosition.row;
-        const newCol = ship.initialPosition.col + i;
-
-        if (board[newRow][newCol].value !== "Hit") {
-          return false;
-        }
-      }
+  const handleComputerAttack = () => {
+    if (gameHasStarted && player2Turn) {
+      const { row, col } = getRandomPosition(); 
+      const newBoard = handleAttack(player1Board, row, col);
+      setPlayer1Board(newBoard);
+      setPlayer2Turn(false);
+      setPlayer1Turn(true);
     }
-    return true;
+  }; 
+
+  const handleAttack = (board, row, col) => {
+    const cellValue = board[row][col].value;
+    const isHit = cellValue === "Ship";
+
+    const newBoard = [...board];
+    newBoard[row][col].value = isHit ? "Hit" : "Miss";
+    return newBoard;
   };
 
-  const markShipAsSunk = (ship, board) => {
-    const updatedBoard = [...board];
-  
-    if (ship.orientation === "Vertical") {
-      for (let i = 0; i < ship.type.length; i++) {
-        const newRow = ship.initialPosition.row + i;
-        const newCol = ship.initialPosition.col;
-        updatedBoard[newCol][newRow].value = "Sunk";
-      }
-    } else if (ship.orientation === "Horizontal") {
-      for (let i = 0; i < ship.type.length; i++) {
-        const newRow = ship.initialPosition.row;
-        const newCol = ship.initialPosition.col + i;
-        updatedBoard[newCol][newRow].value = "Sunk";
-      }
-    }
-    
-    return updatedBoard;
-  };
+  const checkIfShipIsSunk = (ship, board) => {};
+
+  const markShipAsSunk = (ship, board) => {};
 
   const placeRandomShips = (board) => {
     const placedShips = [];
@@ -267,7 +221,7 @@ const App = () => {
       placedShips.push({
         type: shipType,
         length: ships[shipType].length,
-        initialPosition: { row: randomCol, col: randomRow },
+        initialPosition: { row: randomRow, col: randomCol },
         orientation: randomOrientation,
         isSunk: false,
       });
@@ -299,9 +253,9 @@ const App = () => {
   };
 
   const handlePlayButtonClick = () => {
-    setGameHasStarted(true);
-
     handlePlayer2RandomBoard();
+    setGameHasStarted(true);
+    setPlayer1Turn(true);
   };
 
   return (
@@ -322,6 +276,8 @@ const App = () => {
             onClick={handleMyBoardClick}
             isMyBoard={true}
             ships={player1Ships}
+            isPlayerTurn={player1Turn}
+            gameStarted={gameHasStarted}
           />
           {!gameHasStarted && (
             <ShipSelectionMenu
@@ -329,28 +285,12 @@ const App = () => {
               onSelectOrientation={(orientation) =>
                 setSelectedOrientation(orientation)
               }
+              onRandomBoard={handlePlayer1RandomBoard}
+              onResetBoard={handlePlayer1ResetBoard}
               placedShips={player1Ships}
+              gameHasStarted={gameHasStarted}
             />
           )}
-          <div className="button-container">
-            <button className="reset-button" onClick={handlePlayer1ResetBoard}>
-              <img
-                src="../src/assets/battleship-deleteBoard-icon.png"
-                className="reset-icon"
-              />
-              Reset
-            </button>
-            <button
-              className="random-button"
-              onClick={handlePlayer1RandomBoard}
-            >
-              <img
-                src="../src/assets/battleship-randomBoard-icon.png"
-                className="random-icon"
-              />
-              Random
-            </button>
-          </div>
         </div>
         <div className="board-column">
           <h2 className="secondaryTitle-text secondaryTitle-text-enemyBoard">
@@ -361,6 +301,8 @@ const App = () => {
             onClick={handleEnemyBoardClick}
             isMyBoard={false}
             ships={null}
+            isPlayerTurn={player2Turn}
+            gameStarted={gameHasStarted}
           />
         </div>
       </div>
