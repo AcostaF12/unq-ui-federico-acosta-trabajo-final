@@ -38,7 +38,7 @@ const App = () => {
     setTimeout(() => {
       handleComputerAttack();
     }, 1800);
-  }, [player2Turn]); 
+  }, [player2Turn]);
 
   function isReady() {
     return player1Ships.length === 4;
@@ -158,7 +158,7 @@ const App = () => {
 
   const handleEnemyBoardClick = (row, col) => {
     if (gameHasStarted && player1Turn) {
-      const newBoard = handleAttack(player2Board, row, col);
+      const newBoard = handleAttack(player2Board, row, col, player2Ships, setPlayer2Ships);
       setPlayer2Board(newBoard);
       setPlayer1Turn(false);
       setPlayer2Turn(true);
@@ -167,26 +167,97 @@ const App = () => {
 
   const handleComputerAttack = () => {
     if (gameHasStarted && player2Turn) {
-      const { row, col } = getRandomPosition(); 
-      const newBoard = handleAttack(player1Board, row, col);
+      const { row, col } = getRandomPosition();
+      const newBoard = handleAttack(player1Board, row, col, player1Ships, setPlayer1Ships);
       setPlayer1Board(newBoard);
       setPlayer2Turn(false);
       setPlayer1Turn(true);
     }
-  }; 
+  };
 
-  const handleAttack = (board, row, col) => {
+  const handleAttack = (board, row, col, playerShips, playerShipsSetter) => {
     const cellValue = board[row][col].value;
     const isHit = cellValue === "Ship";
-
     const newBoard = [...board];
     newBoard[row][col].value = isHit ? "Hit" : "Miss";
+
+    if (isHit) {
+      const attackedShip = playerShips.find((ship) => {
+        const { row: shipRow, col: shipCol, length, orientation } = ship;
+      
+        if (orientation === "Vertical") {
+          return (
+            row >= shipRow &&
+            row < shipRow + length &&
+            col === shipCol
+          );
+        } else if (orientation === "Horizontal") {
+          return (
+            row === shipRow &&
+            col >= shipCol &&
+            col < shipCol + length
+          );
+        }
+      
+        return false;
+      });
+      
+      console.log("attackedShip before checkIfShipIsSunk", attackedShip);
+      // const isShipSunk = checkIfShipIsSunk(attackedShip, newBoard);
+      if (true) {
+        markShipAsSunk(attackedShip, newBoard, playerShips, playerShipsSetter);
+      }
+    }
+
     return newBoard;
   };
 
-  const checkIfShipIsSunk = (ship, board) => {};
+  const checkIfShipIsSunk = (ship, board) => {
+    // const { length, orientation } = ship;
+    // const { row, col } = ship.initialPosition;
 
-  const markShipAsSunk = (ship, board) => {};
+    // for (let i = 0; i < length; i++) {
+    //   let newRow = row;
+    //   let newCol = col;
+
+    //   if (orientation === "Vertical") {
+    //     newCol = col + i;
+    //   } else if (orientation === "Horizontal") {
+    //     newRow = row + i;
+    //   }
+
+    //   if (board[newRow][newCol].value !== "Hit") {
+    //     return false;
+    //   }
+    // }
+
+    // return true;
+  };
+
+  const markShipAsSunk = (ship, board, playerShips, playerShipsSetter) => {
+    const { length, orientation } = ship;
+    const { row, col } = ship.initialPosition;
+    const newShips = [...playerShips];
+
+    for (let i = 0; i < length; i++) {
+      let newRow = row;
+      let newCol = col;
+
+      if (orientation === "Vertical") {
+        newCol = col + i;
+      } else if (orientation === "Horizontal") {
+        newRow = row + i;
+      }
+
+      board[newRow][newCol].value = "Sunk";
+    }
+
+    const updatedShips = newShips.map((prevShip) =>
+      prevShip.type === ship.type ? { ...prevShip, isSunk: true } : prevShip
+    );
+
+    playerShipsSetter(updatedShips);
+  };
 
   const placeRandomShips = (board) => {
     const placedShips = [];
