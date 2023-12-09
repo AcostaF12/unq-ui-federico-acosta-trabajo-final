@@ -40,11 +40,6 @@ const App = () => {
     }, 1800);
   }, [player2Turn]);
 
-  console.log("Player 1 ships:", player1Ships);
-  console.log("Player 2 ships:", player2Ships);
-  console.log("Board player 1:", player1Board);
-  console.log("Board player 2:", player2Board);
-
   function isReady() {
     return player1Ships.length === 4;
   }
@@ -110,9 +105,9 @@ const App = () => {
     return newBoard;
   };  
 
-  const handleEnemyBoardClick = (row, col) => {
+  const handleEnemyBoardClick = (col, row) => {
     if (gameHasStarted && player1Turn) {
-      const newBoard = handleAttack(player2Board, row, col, player2Ships, setPlayer2Ships);
+      const newBoard = handleAttack(player2Board, col, row, player2Ships, setPlayer2Ships);
       setPlayer2Board(newBoard);
       setPlayer1Turn(false);
       setPlayer2Turn(true);
@@ -121,22 +116,53 @@ const App = () => {
 
   const handleComputerAttack = () => {
     if (gameHasStarted && player2Turn) {
-      const { row, col } = getRandomPosition();
-      const newBoard = handleAttack(player1Board, row, col, player1Ships, setPlayer1Ships);
+      const { col, row } = getRandomPosition();
+      const newBoard = handleAttack(player1Board, col, row, player1Ships, setPlayer1Ships);
       setPlayer1Board(newBoard);
       setPlayer2Turn(false);
       setPlayer1Turn(true);
     }
   };
 
-  const handleAttack = (board, row, col, playerShips, playerShipsSetter) => {
-    const cellValue = board[row][col].value;
+  const handleAttack = (board, col, row, playerShips) => {
+    const cellValue = board[col][row].value;
     const isHit = cellValue === "Ship";
-    const newBoard = [...board];
-    newBoard[row][col].value = isHit ? "Hit" : "Miss";
-
+    const newBoard = markCell(board, col, row, isHit);
+  
+    if (isHit) {
+      const ship = findShipByCoordinates(playerShips, col, row);
+  
+      if (ship && isShipFullyHit(newBoard, ship)) {
+        markShipAsSunk(newBoard, ship);
+      }
+    }
+  
     return newBoard;
   };
+  
+  const markCell = (board, col, row, isHit) => {
+    const newBoard = [...board];
+    newBoard[col][row].value = isHit ? "Hit" : "Miss";
+    return newBoard;
+  };
+  
+  const findShipByCoordinates = (playerShips, col, row) => {
+    return playerShips.find((ship) =>
+      ship.positions.some((pos) => pos.col === col && pos.row === row)
+    );
+  };
+  
+  const isShipFullyHit = (board, ship) => {
+    return ship.positions.every(
+      (pos) => board[pos.col][pos.row].value === "Hit"
+    );
+  };
+  
+  const markShipAsSunk = (board, ship) => {
+    ship.positions.forEach(({ col, row }) => {
+      board[col][row].value = "Sunk";
+    });
+  }; 
 
   const placeRandomShips = (board) => {
     const placedShips = [];
