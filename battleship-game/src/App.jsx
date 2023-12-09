@@ -44,15 +44,15 @@ const App = () => {
     return player1Ships.length === 4;
   }
 
-  const handleMyBoardClick = (row, col) => {
+  const handleMyBoardClick = (col, row) => {
     if (selectedShip && selectedOrientation) {
       const shipType = selectedShip.type;
       const shipLength = selectedShip.length;
       const orientation = selectedOrientation;
 
       const isValidPlacement = validateShipPlacement(
-        row,
         col,
+        row,
         shipLength,
         orientation,
         player1Board
@@ -63,8 +63,8 @@ const App = () => {
         !player1Ships.some((ship) => ship.type === shipType)
       ) {
         const updatedBoard = updateBoardWithShip(
-          row,
           col,
+          row,
           shipLength,
           orientation,
           player1Board
@@ -75,7 +75,7 @@ const App = () => {
           ...player1Ships,
           {
             type: shipType,
-            initialPosition: { row: row, col: col },
+            initialPosition: { col: col, row: row },
             length: shipLength,
             orientation: selectedOrientation,
             isSunk: false,
@@ -181,82 +181,13 @@ const App = () => {
     const newBoard = [...board];
     newBoard[row][col].value = isHit ? "Hit" : "Miss";
 
-    if (isHit) {
-      const attackedShip = playerShips.find((ship) => {
-        const { row: shipRow, col: shipCol, length, orientation } = ship;
-      
-        if (orientation === "Vertical") {
-          return (
-            row >= shipRow &&
-            row < shipRow + length &&
-            col === shipCol
-          );
-        } else if (orientation === "Horizontal") {
-          return (
-            row === shipRow &&
-            col >= shipCol &&
-            col < shipCol + length
-          );
-        }
-      
-        return false;
-      });
-      
-      console.log("attackedShip before checkIfShipIsSunk", attackedShip);
-      // const isShipSunk = checkIfShipIsSunk(attackedShip, newBoard);
-      if (true) {
-        markShipAsSunk(attackedShip, newBoard, playerShips, playerShipsSetter);
-      }
-    }
-
     return newBoard;
   };
 
   const checkIfShipIsSunk = (ship, board) => {
-    // const { length, orientation } = ship;
-    // const { row, col } = ship.initialPosition;
-
-    // for (let i = 0; i < length; i++) {
-    //   let newRow = row;
-    //   let newCol = col;
-
-    //   if (orientation === "Vertical") {
-    //     newCol = col + i;
-    //   } else if (orientation === "Horizontal") {
-    //     newRow = row + i;
-    //   }
-
-    //   if (board[newRow][newCol].value !== "Hit") {
-    //     return false;
-    //   }
-    // }
-
-    // return true;
   };
 
   const markShipAsSunk = (ship, board, playerShips, playerShipsSetter) => {
-    const { length, orientation } = ship;
-    const { row, col } = ship.initialPosition;
-    const newShips = [...playerShips];
-
-    for (let i = 0; i < length; i++) {
-      let newRow = row;
-      let newCol = col;
-
-      if (orientation === "Vertical") {
-        newCol = col + i;
-      } else if (orientation === "Horizontal") {
-        newRow = row + i;
-      }
-
-      board[newRow][newCol].value = "Sunk";
-    }
-
-    const updatedShips = newShips.map((prevShip) =>
-      prevShip.type === ship.type ? { ...prevShip, isSunk: true } : prevShip
-    );
-
-    playerShipsSetter(updatedShips);
   };
 
   const placeRandomShips = (board) => {
@@ -267,21 +198,21 @@ const App = () => {
       let randomRow, randomCol, randomOrientation;
 
       while (!isValidPlacement) {
-        randomRow = getRandomPosition().row;
         randomCol = getRandomPosition().col;
+        randomRow = getRandomPosition().row;
         randomOrientation = Math.random() < 0.5 ? "Vertical" : "Horizontal";
 
         isValidPlacement = validateShipPlacement(
-          randomRow,
           randomCol,
+          randomRow,
           ships[shipType].length,
           randomOrientation,
           board
         );
       }
       const updatedBoard = updateBoardWithShip(
-        randomRow,
         randomCol,
+        randomRow,
         ships[shipType].length,
         randomOrientation,
         board
@@ -292,7 +223,7 @@ const App = () => {
       placedShips.push({
         type: shipType,
         length: ships[shipType].length,
-        initialPosition: { row: randomRow, col: randomCol },
+        initialPosition: { col: randomCol, row: randomRow },
         orientation: randomOrientation,
         isSunk: false,
       });

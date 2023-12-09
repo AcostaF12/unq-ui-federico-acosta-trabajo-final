@@ -13,19 +13,19 @@ export const Board = ({ cells, isMyBoard, onClick, isPlayerTurn, gameStarted }) 
         ))}
       </div>
       <div className={`board ${isMyBoard ? "my-board" : "enemy-board"}`}>
-        {cells.map((row, rowIndex) => (
-          <div key={rowIndex} className="row">
-            <div className="letter-cell">{alphabet[rowIndex]}</div>
-            {row.map((cell, colIndex) => (
+        {cells.map((row, colIndex) => (
+          <div key={colIndex} className="row">
+            <div className="letter-cell">{alphabet[colIndex]}</div>
+            {row.map((cell, rowIndex) => (
               <Cell
-                key={colIndex}
+                key={rowIndex}
                 value={
-                  cells[rowIndex][colIndex] &&
-                  cells[rowIndex][colIndex].value !== null
-                    ? cells[rowIndex][colIndex].value
+                  cells[colIndex][rowIndex] &&
+                  cells[colIndex][rowIndex].value !== null
+                    ? cells[colIndex][rowIndex].value
                     : "Empty"
                 }
-                onClick={() => onClick(rowIndex, colIndex)}
+                onClick={() => onClick(colIndex, rowIndex)}
               />
             ))}
           </div>
