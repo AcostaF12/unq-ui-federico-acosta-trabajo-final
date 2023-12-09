@@ -40,6 +40,11 @@ const App = () => {
     }, 1800);
   }, [player2Turn]);
 
+  console.log("Player 1 ships:", player1Ships);
+  console.log("Player 2 ships:", player2Ships);
+  console.log("Board player 1:", player1Board);
+  console.log("Board player 2:", player2Board);
+
   function isReady() {
     return player1Ships.length === 4;
   }
@@ -47,114 +52,63 @@ const App = () => {
   const handleMyBoardClick = (col, row) => {
     if (selectedShip && selectedOrientation) {
       const shipType = selectedShip.type;
+  
       const shipLength = selectedShip.length;
-      const orientation = selectedOrientation;
-
-      const isValidPlacement = validateShipPlacement(
-        col,
-        row,
-        shipLength,
-        orientation,
-        player1Board
-      );
-
-      if (
-        isValidPlacement &&
-        !player1Ships.some((ship) => ship.type === shipType)
-      ) {
-        const updatedBoard = updateBoardWithShip(
-          col,
-          row,
-          shipLength,
-          orientation,
-          player1Board
-        );
-
+      const shipPositions = calculateShipPositions(col, row, shipLength, selectedOrientation);
+  
+      const isValidPlacement = validateShipPositions(shipPositions, player1Board);
+  
+      if (isValidPlacement && !player1Ships.some((ship) => ship.type === shipType)) {
+        const updatedBoard = updateBoardWithShip(shipPositions, player1Board);
+  
         setPlayer1Board(updatedBoard);
         setPlayer1Ships([
           ...player1Ships,
           {
             type: shipType,
-            initialPosition: { col: col, row: row },
-            length: shipLength,
-            orientation: selectedOrientation,
-            isSunk: false,
+            positions: shipPositions
           },
         ]);
       }
     }
   };
-
-  const validateShipPlacement = (
-    startRow,
-    startCol,
-    length,
-    orientation,
-    board
-  ) => {
-    if (
-      startRow < 0 ||
-      startRow >= board.length ||
-      startCol < 0 ||
-      startCol >= board[0].length
-    ) {
-      return false;
-    }
-
+  
+  const calculateShipPositions = (startCol, startRow, length, orientation) => {
+    const positions = [];
+  
     for (let i = 0; i < length; i++) {
-      let newRow, newCol;
-
-      if (orientation === "Vertical") {
-        newRow = startRow;
-        newCol = startCol + i;
-      } else if (orientation === "Horizontal") {
-        newRow = startRow + i;
-        newCol = startCol;
-      }
-
-      if (
-        newRow < 0 ||
-        newRow >= board.length ||
-        newCol < 0 ||
-        newCol >= board[0].length
-      ) {
-        return false;
-      }
-
-      if (board[newRow][newCol] && board[newRow][newCol].value === "Ship") {
-        return false;
-      }
+      const newCol = orientation === "Vertical" ? startCol : startCol + i;
+      const newRow = orientation === "Horizontal" ? startRow : startRow + i;
+  
+      positions.push({ col: newCol, row: newRow });
     }
+  
+    return positions;
+  };
 
-    return true;
+  const validateShipPositions = (positions, board) => {
+    return positions.every(
+      (pos) =>
+        pos.row >= 0 &&
+        pos.row < board.length &&
+        pos.col >= 0 &&
+        pos.col < board[0].length &&
+        board[pos.col][pos.row].value === "Empty"
+    );
   };
 
   const updateBoardWithShip = (
-    startRow,
-    startCol,
-    length,
-    orientation,
+    positions,
     board
   ) => {
     const newBoard = [...board];
-
-    if (orientation === "Vertical") {
-      for (let i = 0; i < length; i++) {
-        const newRow = startRow;
-        const newCol = startCol + i;
-
-        newBoard[newRow][newCol] = { value: "Ship" };
-      }
-    } else if (orientation === "Horizontal") {
-      for (let i = 0; i < length; i++) {
-        const newRow = startRow + i;
-        const newCol = startCol;
-
-        newBoard[newRow][newCol] = { value: "Ship" };
-      }
-    }
+  
+    positions.forEach(({ col, row }) => {
+      newBoard[col][row] = { value: "Ship" };
+    });
+  
     return newBoard;
-  };
+  };  
 
   const handleEnemyBoardClick = (row, col) => {
     if (gameHasStarted && player1Turn) {
@@ -184,53 +138,47 @@ const App = () => {
     return newBoard;
   };
 
-  const checkIfShipIsSunk = (ship, board) => {
-  };
-
-  const markShipAsSunk = (ship, board, playerShips, playerShipsSetter) => {
-  };
-
   const placeRandomShips = (board) => {
     const placedShips = [];
-
+  
     Object.keys(ships).forEach((shipType) => {
       let isValidPlacement = false;
-      let randomRow, randomCol, randomOrientation;
-
+      let randomCol, randomRow, randomOrientation;
+  
       while (!isValidPlacement) {
         randomCol = getRandomPosition().col;
         randomRow = getRandomPosition().row;
         randomOrientation = Math.random() < 0.5 ? "Vertical" : "Horizontal";
-
-        isValidPlacement = validateShipPlacement(
+  
+        const shipLength = ships[shipType].length;
+        const shipPositions = calculateShipPositions(
           randomCol,
           randomRow,
-          ships[shipType].length,
-          randomOrientation,
-          board
+          shipLength,
+          randomOrientation
         );
+  
+        isValidPlacement = validateShipPositions(shipPositions, board);
       }
-      const updatedBoard = updateBoardWithShip(
+
+      const shipPositions = calculateShipPositions(
         randomCol,
         randomRow,
         ships[shipType].length,
-        randomOrientation,
-        board
+        randomOrientation
       );
 
-      board = updatedBoard;
-
+      board = updateBoardWithShip(shipPositions, board);
+  
       placedShips.push({
         type: shipType,
-        length: ships[shipType].length,
-        initialPosition: { col: randomCol, row: randomRow },
-        orientation: randomOrientation,
-        isSunk: false,
+        positions: shipPositions,
       });
     });
+  
     return { board, placedShips };
   };
-
+  
   const handlePlayer1RandomBoard = () => {
     const { board, placedShips } = placeRandomShips(initializeBoard());
     setPlayer1Board(board);
