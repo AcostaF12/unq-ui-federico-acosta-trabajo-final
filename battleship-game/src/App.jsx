@@ -29,6 +29,7 @@ const App = () => {
   const [selectedShip, setSelectedShip] = useState(null);
   const [selectedOrientation, setSelectedOrientation] = useState(null);
   const [gameHasStarted, setGameHasStarted] = useState(false);
+  const [gameOver, setGameOver] = useState(false);
 
   const [showModal, setShowModal] = useState(false);
 
@@ -47,12 +48,31 @@ const App = () => {
 
   useEffect(() => {
     if (player1ShipsRemaining === 0 || player2ShipsRemaining === 0) {
+      setGameOver(true);
+      setPlayer1Turn(false);
+      setPlayer2Turn(false);
       handleShow();
     }
   }, [player1ShipsRemaining, player2ShipsRemaining]);
 
   const handleClose = () => setShowModal(false);
   const handleShow = () => setShowModal(true);
+
+  const handleRestartGame = () => {
+    setPlayer1Board(initializeBoard());
+    setPlayer2Board(initializeBoard());
+    setPlayer1Ships([]);
+    setPlayer2Ships([]);
+    setPlayer1Turn(false);
+    setPlayer2Turn(false);
+    setPlayer1ShipsRemaining(4);
+    setPlayer2ShipsRemaining(4);
+    setSelectedShip(null);
+    setSelectedOrientation(null);
+    setGameHasStarted(false);
+    setGameOver(false);
+    setShowModal(false);
+  }
 
   function isReady() {
     return player1Ships.length === 4;
@@ -120,7 +140,7 @@ const App = () => {
   };  
 
   const handleEnemyBoardClick = (col, row) => {
-    if (gameHasStarted && player1Turn) {
+    if (gameHasStarted && player1Turn && !gameOver) {
       const newBoard = handleAttack(player2Board, col, row, player2Ships, setPlayer2Ships);
       setPlayer2Board(newBoard);
       setPlayer1Turn(false);
@@ -129,7 +149,7 @@ const App = () => {
   };
 
   const handleComputerAttack = () => {
-    if (gameHasStarted && player2Turn) {
+    if (gameHasStarted && player2Turn && !gameOver) {
       let { col, row } = getRandomPosition();
   
       while (player1Board[col][row].value !== "Empty" && player1Board[col][row].value !== "Ship") {
@@ -279,6 +299,7 @@ const App = () => {
             ships={player1Ships}
             isPlayerTurn={player1Turn}
             gameStarted={gameHasStarted}
+            gameOver={gameOver}
           />
           {!gameHasStarted && (
             <ShipSelectionMenu
@@ -302,8 +323,9 @@ const App = () => {
             onClick={handleEnemyBoardClick}
             isMyBoard={false}
             ships={null}
-            isPlayerTurn={player2Turn}
+            isPlayerTurn={player2Turn && !gameOver}
             gameStarted={gameHasStarted}
+            gameOver={gameOver}
           />
         </div>
       </div>
@@ -312,11 +334,11 @@ const App = () => {
           <Modal.Title><p className="my-modalTitle-text">Game Over</p></Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {player1ShipsRemaining === 0 && <p className="my-modalBody-text">You Lose...</p>}
+          {player1ShipsRemaining === 0 && <p className="my-modalBody-text">You Lose... </p>}
           {player2ShipsRemaining === 0 && <p className="my-modalBody-text">You Win!</p>}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
+          <Button variant="secondary" onClick={handleRestartGame}>
             Play Again
           </Button>
         </Modal.Footer>

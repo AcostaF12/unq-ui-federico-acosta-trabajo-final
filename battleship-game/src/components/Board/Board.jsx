@@ -1,12 +1,12 @@
 import { Cell } from "../Cell/Cell";
 import "./Board.css";
 
-export const Board = ({ cells, isMyBoard, onClick, isPlayerTurn, gameStarted }) => {
+export const Board = ({ cells, isMyBoard, onClick, isPlayerTurn, gameStarted, gameOver }) => {
   const alphabet = "ABCDEFGHIJ";
   const numberSequence = Array.from({ length: 10 }, (_, i) => i + 1);
 
   return (
-    <div className={`my-boards-container ${gameStarted && isPlayerTurn ? 'my-inactive-board' : ''}`}>
+    <div className={`my-boards-container ${!isMyBoard && !gameStarted || gameStarted && isPlayerTurn || gameOver ? 'my-inactive-board' : ''}`}>
       <div className="my-number-column">
         {numberSequence.map((number, index) => (
           <div key={index} className="my-number-cell">{number}</div>
