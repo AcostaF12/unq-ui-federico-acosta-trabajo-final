@@ -33,5 +33,8 @@
 
 .my-boards-container.my-inactive-board {
   filter: brightness(0.7);
+}
+
+.my-boards-container.my-notClickable-board {
   pointer-events: none; 
 }

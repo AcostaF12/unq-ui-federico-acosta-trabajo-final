@@ -41,9 +41,11 @@ const App = () => {
   };
 
   useEffect(() => {
-    setTimeout(() => {
-      handleComputerAttack();
-    }, 200);
+    if(gameHasStarted && player2Turn && !gameOver) {
+      setTimeout(() => {
+        handleComputerAttack();
+      }, 1500);
+    }
   }, [player2Turn]);
 
   useEffect(() => {

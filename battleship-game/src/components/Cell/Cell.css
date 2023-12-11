@@ -10,12 +10,12 @@
   background-size: cover;
 }
 
-.my-cell-notHit {
+.my-cell-notHit, .my-cell-ship {
   transition: filter 0.3s ease;
   cursor: pointer;
 }
 
-.my-cell-notHit:hover {
+.my-cell-notHit:hover, .my-cell-ship:hover {
   filter: brightness(1.3);
 }
 
