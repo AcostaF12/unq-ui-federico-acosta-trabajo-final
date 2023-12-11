@@ -6,13 +6,13 @@
   text-align: center;
 }
 
-.mainTitle-text {
+.my-mainTitle-text {
   font-size: 3rem;
   font-weight: 700;
   margin-bottom: 2rem;
 }
 
-.secondaryTitle-text {
+.my-secondaryTitle-text {
   font-size: 2rem;
   font-weight: 700;
   margin-bottom: 2rem;
@@ -20,25 +20,25 @@
   cursor: default;
 }
 
-.secondaryTitle-text-myBoard {
+.my-secondaryTitle-text-myBoard {
   color: cornflowerblue;
 }
 
-.secondaryTitle-text-enemyBoard {
+.my-secondaryTitle-text-enemyBoard {
   color: #A52A2A;
 }
 
-.board-column {
+.my-board-column {
   text-align: center;
   margin: 20px;
 }
 
-.play-button {
+.my-play-button {
   margin: 10px;
   padding-left: 30px;
   padding-right: 30px;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
   font-size: 1.3rem;
   background-color: #4caf50;
   color: #fff;
@@ -47,6 +47,10 @@
   transition: all 0.3s ease 0s;
 }
 
-.play-button:hover {
+.my-play-button:hover {
   background-color: #3e8e41;
+}
+
+.my-modalBody-text, .my-modalTitle-text {
+  color: #242424;
 }

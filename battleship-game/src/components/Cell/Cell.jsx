@@ -8,12 +8,12 @@ export const Cell = ({ value, onClick }) => {
   const isEmpty = value === "Empty";
 
   const cellClasses = {
-    cell: true,
-    "cell-notHit": isEmpty,
-    "cell-ship": hasShip,
-    "cell-miss": isMiss,
-    "cell-hit": isHit,
-    "cell-sunk": isSunk,
+    myCell: true,
+    "my-cell-notHit": isEmpty,
+    "my-cell-ship": hasShip,
+    "my-cell-miss": isMiss,
+    "my-cell-hit": isHit,
+    "my-cell-sunk": isSunk,
   };
 
   const handleClick = () => {

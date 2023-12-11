@@ -45,12 +45,12 @@ export const ShipSelectionMenu = ({
   ];
 
   return (
-    <div className="ship-selection-container">
-      <div className="ship-selection-menu">
+    <div className="my-ship-selection-container">
+      <div className="my-ship-selection-menu">
         <h3>Select a Ship:</h3>
-        <div className="orientation-buttons">
+        <div className="my-orientation-buttons">
           <button
-            className={`orientation-button ${
+            className={`my-orientation-button ${
               selectedOrientation === "Horizontal" ? "selected" : ""
             }`}
             onClick={() => {
@@ -61,7 +61,7 @@ export const ShipSelectionMenu = ({
             Horizontal
           </button>
           <button
-            className={`orientation-button ${
+            className={`my-orientation-button ${
               selectedOrientation === "Vertical" ? "selected" : ""
             }`}
             onClick={() => {
@@ -72,11 +72,11 @@ export const ShipSelectionMenu = ({
             Vertical
           </button>
         </div>
-        <ul className="ship-list">
+        <ul className="my-ship-list">
           {shipTypes.map((ship) => (
             <li
               key={ship.type}
-              className={`ship-list-item ${
+              className={`my-ship-list-item ${
                 selectedShip === ship.type ? "selected" : ""
               } ${
                 placedShips.some((placedShip) => placedShip.type === ship.type)
@@ -93,7 +93,7 @@ export const ShipSelectionMenu = ({
               }}
             >
               <div
-                className="ship-image"
+                className="my-ship-image"
                 style={{ backgroundImage: `url(${ship.image})` }}
               ></div>
               {ship.description}
@@ -101,19 +101,19 @@ export const ShipSelectionMenu = ({
           ))}
         </ul>
         {!gameHasStarted && (
-          <div className="button-container">
-            <button className="reset-button" onClick={onResetBoard}>
+          <div className="my-button-container">
+            <button className="my-reset-button" onClick={onResetBoard}>
               <img
                 src="../src/assets/battleship-deleteBoard-icon.png"
-                className="reset-icon"
+                className="my-reset-icon"
                 alt="Reset"
               />
               Reset
             </button>
-            <button className="random-button" onClick={onRandomBoard}>
+            <button className="my-random-button" onClick={onRandomBoard}>
               <img
                 src="../src/assets/battleship-randomBoard-icon.png"
-                className="random-icon"
+                className="my-random-icon"
                 alt="Random"
               />
               Random

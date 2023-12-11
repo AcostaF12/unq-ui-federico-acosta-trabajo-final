@@ -1,16 +1,16 @@
-.ship-selection-container {
+.my-ship-selection-container {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
 }
 
-.ship-selection-menu {
+.my-ship-selection-menu {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
 }
 
-ul.ship-list {
+ul.my-ship-list {
   justify-content: flex-start;
   align-items: flex-start;
   display: list-item;
@@ -19,7 +19,7 @@ ul.ship-list {
   margin: 0;
 }
 
-.ship-list-item {
+.my-ship-list-item {
   cursor: pointer;
   padding: 10px;
   margin-top: 5px;
@@ -31,17 +31,17 @@ ul.ship-list {
   align-items: center; 
 }
 
-.ship-list-item:hover {
+.my-ship-list-item:hover {
   background-color: #696969;
 
 }
 
-.ship-list-item.selected {
+.my-ship-list-item.selected {
   background-color: #3498db;
   color: #fff;
 }
 
-.ship-image {
+.my-ship-image {
   width: 50px; 
   height: 20px;
   margin-right: 8px;
@@ -49,42 +49,45 @@ ul.ship-list {
   background-position: center;
 }
 
-.orientation-buttons {
+.my-orientation-buttons {
   display: inline-flex;
   width: 100%;
   justify-content: space-evenly;
   margin-bottom: 10px;
 }
 
-.orientation-button {
+.my-orientation-button {
   width: 40%;
   height: 30px;
-  cursor: pointer;
 }
 
-.orientation-button.selected {
+.my-orientation-button:hover {
+  filter: brightness(1.2);
+}
+
+.my-orientation-button.selected {
   background-color: #3498db;
   color: #fff;
 }
 
-.ship-list-item.disabled {
+.my-ship-list-item.disabled {
   filter: brightness(0.5);
   background-color: transparent;
   color: #888;
   cursor: not-allowed;
 }
 
-.ship-list-item.disabled:hover {
+.my-ship-list-item.disabled:hover {
   background-color: transparent;
 }
 
-.button-container {
+.my-button-container {
   display: flex;
   justify-content: flex-start;
   margin-top: 15px;
 }
 
-.reset-button {
+.my-reset-button {
   padding: 10px;
   font-size: 1.2rem;
   background-color: #d9534f;
@@ -96,23 +99,23 @@ ul.ship-list {
   transition: all 0.3s ease 0s;
 }
 
-.reset-icon {
+.my-reset-icon {
   width: 20px;
   height: 20px;
   margin-right: 8px;
 }
 
-.reset-button:hover {
+.my-reset-button:hover {
   background-color: #c9302c; 
 }
 
-.random-icon {
+.my-random-icon {
   width: 20px;
   height: 20px;
   margin-right: 8px;
 }
 
-.random-button {
+.my-random-button {
   margin-left: 10px;
   padding: 10px;
   font-size: 1.2rem;
@@ -125,6 +128,6 @@ ul.ship-list {
   transition: all 0.3s ease 0s;
 }
 
-.random-button:hover {
+.my-random-button:hover {
   background-color: #5a8cb0; 
 }

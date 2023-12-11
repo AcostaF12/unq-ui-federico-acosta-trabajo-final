@@ -1,28 +1,29 @@
-.boards-container {
+.my-boards-container {
   display: flex;
   justify-content: space-between;
 }
 
-.board {
+.my-board {
   display: grid;
   grid-template-columns: repeat(10, 50px);
   gap: 0px;
 }
 
-.number-column {
+.my-number-column {
   display: grid;
   grid-template-rows: repeat(10, 50px);
-  padding-top: 45px;
-  gap: 2px;
+  padding-top: 30px;
+  gap: 0px;
 }
 
-.number-cell {
+.my-number-cell {
   height: 50px; 
   width: 30px;
   cursor: default;
+  padding-top: 12px;
 }
 
-.letter-cell {
+.my-letter-cell {
   height: 30px; 
   display: flex;
   align-items: center;
@@ -30,7 +31,7 @@
   cursor: default;
 }
 
-.boards-container.inactive-board {
+.my-boards-container.my-inactive-board {
   filter: brightness(0.7);
   pointer-events: none; 
 }

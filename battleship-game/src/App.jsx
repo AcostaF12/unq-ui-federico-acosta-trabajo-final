@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
+import { Modal, Button } from 'react-bootstrap';
 import { Board } from "./components/Board/Board";
 import { ShipSelectionMenu } from "./components/ShipSelectionMenu/ShipSelectionMenu";
+import 'bootstrap/dist/css/bootstrap.min.css';
 import "./App.css";
 
 const initializeBoard = () => {
@@ -21,11 +23,14 @@ const App = () => {
 
   const [player1Turn, setPlayer1Turn] = useState(false);
   const [player2Turn, setPlayer2Turn] = useState(false);
+  const [player1ShipsRemaining, setPlayer1ShipsRemaining] = useState(4);
+  const [player2ShipsRemaining, setPlayer2ShipsRemaining] = useState(4);
 
   const [selectedShip, setSelectedShip] = useState(null);
   const [selectedOrientation, setSelectedOrientation] = useState(null);
-
   const [gameHasStarted, setGameHasStarted] = useState(false);
+
+  const [showModal, setShowModal] = useState(false);
 
   const ships = {
     carrier: { length: 5 },
@@ -39,6 +44,15 @@ const App = () => {
       handleComputerAttack();
     }, 200);
   }, [player2Turn]);
+
+  useEffect(() => {
+    if (player1ShipsRemaining === 0 || player2ShipsRemaining === 0) {
+      handleShow();
+    }
+  }, [player1ShipsRemaining, player2ShipsRemaining]);
+
+  const handleClose = () => setShowModal(false);
+  const handleShow = () => setShowModal(true);
 
   function isReady() {
     return player1Ships.length === 4;
@@ -136,9 +150,15 @@ const App = () => {
   
     if (isHit) {
       const ship = findShipByCoordinates(playerShips, col, row);
-  
+
       if (ship && isShipFullyHit(newBoard, ship)) {
         markShipAsSunk(newBoard, ship);
+
+        if (playerShips === player1Ships) {
+          setPlayer1ShipsRemaining(player1ShipsRemaining - 1);
+        } else if (playerShips === player2Ships) {
+          setPlayer2ShipsRemaining(player2ShipsRemaining - 1);
+        }
       }
     }
   
@@ -241,15 +261,15 @@ const App = () => {
 
   return (
     <div>
-      <h1 className="mainTitle-text">Battleship Game</h1>
+      <h1 className="my-mainTitle-text">Battleship Game</h1>
       {isReady() && !gameHasStarted && (
-        <button className="play-button" onClick={handlePlayButtonClick}>
+        <button className="my-play-button" onClick={handlePlayButtonClick}>
           Play
         </button>
       )}
-      <div className="boards-container">
-        <div className="board-column">
-          <h2 className="secondaryTitle-text secondaryTitle-text-myBoard">
+      <div className="my-boards-container">
+        <div className="my-board-column">
+          <h2 className="my-secondaryTitle-text my-secondaryTitle-text-myBoard">
             My Board
           </h2>
           <Board
@@ -273,8 +293,8 @@ const App = () => {
             />
           )}
         </div>
-        <div className="board-column">
-          <h2 className="secondaryTitle-text secondaryTitle-text-enemyBoard">
+        <div className="my-board-column">
+          <h2 className="my-secondaryTitle-text my-secondaryTitle-text-enemyBoard">
             Enemy Board
           </h2>
           <Board
@@ -287,6 +307,20 @@ const App = () => {
           />
         </div>
       </div>
+      <Modal show={showModal} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title><p className="my-modalTitle-text">Game Over</p></Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {player1ShipsRemaining === 0 && <p className="my-modalBody-text">You Lose...</p>}
+          {player2ShipsRemaining === 0 && <p className="my-modalBody-text">You Win!</p>}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Play Again
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };
