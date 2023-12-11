@@ -29,18 +29,19 @@
 }
 
 .my-cell-hit {
-  background-image: url('../../assets/battleship-shipHit-cell-icon.jpeg'); 
+  background-image: url('../../assets/battleship-shipHit-cell-icon.png'); 
   background-size: cover;
-  filter: brightness(0.85);
+  filter: brightness(0.80);
 }
 
 .my-cell-sunk {
-  background-image: url('../../assets/battleship-shipSunk-cell-icon.jpeg'); 
+  background-image: url('../../assets/prueba2.png'); 
   background-size: cover;
-  filter: brightness(0.85);
+  filter: brightness(0.80);
 }
 
 .my-hit-icon {
+  filter: brightness(1);
   width: 100%;
   height: 100%;
   object-fit: cover;
