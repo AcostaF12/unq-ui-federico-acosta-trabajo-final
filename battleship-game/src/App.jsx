@@ -37,7 +37,7 @@ const App = () => {
   useEffect(() => {
     setTimeout(() => {
       handleComputerAttack();
-    }, 1800);
+    }, 200);
   }, [player2Turn]);
 
   function isReady() {
@@ -116,7 +116,12 @@ const App = () => {
 
   const handleComputerAttack = () => {
     if (gameHasStarted && player2Turn) {
-      const { col, row } = getRandomPosition();
+      let { col, row } = getRandomPosition();
+  
+      while (player1Board[col][row].value !== "Empty" && player1Board[col][row].value !== "Ship") {
+        ({ col, row } = getRandomPosition());
+      }
+  
       const newBoard = handleAttack(player1Board, col, row, player1Ships, setPlayer1Ships);
       setPlayer1Board(newBoard);
       setPlayer2Turn(false);
