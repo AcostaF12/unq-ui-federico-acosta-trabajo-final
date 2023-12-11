@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import { Modal, Button } from 'react-bootstrap';
+import { Modal, Button } from "react-bootstrap";
 import { Board } from "./components/Board/Board";
 import { ShipSelectionMenu } from "./components/ShipSelectionMenu/ShipSelectionMenu";
-import 'bootstrap/dist/css/bootstrap.min.css';
+import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 
 const initializeBoard = () => {
@@ -30,7 +30,7 @@ const App = () => {
   const [selectedOrientation, setSelectedOrientation] = useState(null);
   const [gameHasStarted, setGameHasStarted] = useState(false);
   const [gameOver, setGameOver] = useState(false);
-
+  const [score, setScore] = useState(0);
   const [showModal, setShowModal] = useState(false);
 
   const ships = {
@@ -52,6 +52,10 @@ const App = () => {
       setPlayer1Turn(false);
       setPlayer2Turn(false);
       handleShow();
+
+      if (player2ShipsRemaining === 0) {
+        setScore(score + 1);
+      }
     }
   }, [player1ShipsRemaining, player2ShipsRemaining]);
 
@@ -72,7 +76,7 @@ const App = () => {
     setGameHasStarted(false);
     setGameOver(false);
     setShowModal(false);
-  }
+  };
 
   function isReady() {
     return player1Ships.length === 4;
@@ -81,37 +85,48 @@ const App = () => {
   const handleMyBoardClick = (col, row) => {
     if (selectedShip && selectedOrientation) {
       const shipType = selectedShip.type;
-  
+
       const shipLength = selectedShip.length;
-      const shipPositions = calculateShipPositions(col, row, shipLength, selectedOrientation);
-  
-      const isValidPlacement = validateShipPositions(shipPositions, player1Board);
-  
-      if (isValidPlacement && !player1Ships.some((ship) => ship.type === shipType)) {
+      const shipPositions = calculateShipPositions(
+        col,
+        row,
+        shipLength,
+        selectedOrientation
+      );
+
+      const isValidPlacement = validateShipPositions(
+        shipPositions,
+        player1Board
+      );
+
+      if (
+        isValidPlacement &&
+        !player1Ships.some((ship) => ship.type === shipType)
+      ) {
         const updatedBoard = updateBoardWithShip(shipPositions, player1Board);
-  
+
         setPlayer1Board(updatedBoard);
         setPlayer1Ships([
           ...player1Ships,
           {
             type: shipType,
-            positions: shipPositions
+            positions: shipPositions,
           },
         ]);
       }
     }
   };
-  
+
   const calculateShipPositions = (startCol, startRow, length, orientation) => {
     const positions = [];
-  
+
     for (let i = 0; i < length; i++) {
       const newCol = orientation === "Vertical" ? startCol : startCol + i;
       const newRow = orientation === "Horizontal" ? startRow : startRow + i;
-  
+
       positions.push({ col: newCol, row: newRow });
     }
-  
+
     return positions;
   };
 
@@ -126,22 +141,25 @@ const App = () => {
     );
   };
 
-  const updateBoardWithShip = (
-    positions,
-    board
-  ) => {
+  const updateBoardWithShip = (positions, board) => {
     const newBoard = [...board];
-  
+
     positions.forEach(({ col, row }) => {
       newBoard[col][row] = { value: "Ship" };
     });
-  
+
     return newBoard;
-  };  
+  };
 
   const handleEnemyBoardClick = (col, row) => {
     if (gameHasStarted && player1Turn && !gameOver) {
-      const newBoard = handleAttack(player2Board, col, row, player2Ships, setPlayer2Ships);
+      const newBoard = handleAttack(
+        player2Board,
+        col,
+        row,
+        player2Ships,
+        setPlayer2Ships
+      );
       setPlayer2Board(newBoard);
       setPlayer1Turn(false);
       setPlayer2Turn(true);
@@ -151,12 +169,21 @@ const App = () => {
   const handleComputerAttack = () => {
     if (gameHasStarted && player2Turn && !gameOver) {
       let { col, row } = getRandomPosition();
-  
-      while (player1Board[col][row].value !== "Empty" && player1Board[col][row].value !== "Ship") {
+
+      while (
+        player1Board[col][row].value !== "Empty" &&
+        player1Board[col][row].value !== "Ship"
+      ) {
         ({ col, row } = getRandomPosition());
       }
-  
-      const newBoard = handleAttack(player1Board, col, row, player1Ships, setPlayer1Ships);
+
+      const newBoard = handleAttack(
+        player1Board,
+        col,
+        row,
+        player1Ships,
+        setPlayer1Ships
+      );
       setPlayer1Board(newBoard);
       setPlayer2Turn(false);
       setPlayer1Turn(true);
@@ -167,7 +194,7 @@ const App = () => {
     const cellValue = board[col][row].value;
     const isHit = cellValue === "Ship";
     const newBoard = markCell(board, col, row, isHit);
-  
+
     if (isHit) {
       const ship = findShipByCoordinates(playerShips, col, row);
 
@@ -181,46 +208,46 @@ const App = () => {
         }
       }
     }
-  
+
     return newBoard;
   };
-  
+
   const markCell = (board, col, row, isHit) => {
     const newBoard = [...board];
     newBoard[col][row].value = isHit ? "Hit" : "Miss";
     return newBoard;
   };
-  
+
   const findShipByCoordinates = (playerShips, col, row) => {
     return playerShips.find((ship) =>
       ship.positions.some((pos) => pos.col === col && pos.row === row)
     );
   };
-  
+
   const isShipFullyHit = (board, ship) => {
     return ship.positions.every(
       (pos) => board[pos.col][pos.row].value === "Hit"
     );
   };
-  
+
   const markShipAsSunk = (board, ship) => {
     ship.positions.forEach(({ col, row }) => {
       board[col][row].value = "Sunk";
     });
-  }; 
+  };
 
   const placeRandomShips = (board) => {
     const placedShips = [];
-  
+
     Object.keys(ships).forEach((shipType) => {
       let isValidPlacement = false;
       let randomCol, randomRow, randomOrientation;
-  
+
       while (!isValidPlacement) {
         randomCol = getRandomPosition().col;
         randomRow = getRandomPosition().row;
         randomOrientation = Math.random() < 0.5 ? "Vertical" : "Horizontal";
-  
+
         const shipLength = ships[shipType].length;
         const shipPositions = calculateShipPositions(
           randomCol,
@@ -228,7 +255,7 @@ const App = () => {
           shipLength,
           randomOrientation
         );
-  
+
         isValidPlacement = validateShipPositions(shipPositions, board);
       }
 
@@ -240,16 +267,16 @@ const App = () => {
       );
 
       board = updateBoardWithShip(shipPositions, board);
-  
+
       placedShips.push({
         type: shipType,
         positions: shipPositions,
       });
     });
-  
+
     return { board, placedShips };
   };
-  
+
   const handlePlayer1RandomBoard = () => {
     const { board, placedShips } = placeRandomShips(initializeBoard());
     setPlayer1Board(board);
@@ -282,10 +309,18 @@ const App = () => {
   return (
     <div>
       <h1 className="my-mainTitle-text">Battleship Game</h1>
+      <p className="my-victoryCounter-text">Wins: {score}</p>
       {isReady() && !gameHasStarted && (
         <button className="my-play-button" onClick={handlePlayButtonClick}>
           Play
         </button>
+      )}
+      {gameOver && (
+        <div className="my-play-again-button-container">
+          <Button variant="secondary" onClick={handleRestartGame}>
+            Play Again
+          </Button>
+        </div>
       )}
       <div className="my-boards-container">
         <div className="my-board-column">
@@ -331,17 +366,18 @@ const App = () => {
       </div>
       <Modal show={showModal} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title><p className="my-modalTitle-text">Game Over</p></Modal.Title>
+          <Modal.Title>
+            <p className="my-modalTitle-text">Game Over</p>
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {player1ShipsRemaining === 0 && <p className="my-modalBody-text">You Lose... </p>}
-          {player2ShipsRemaining === 0 && <p className="my-modalBody-text">You Win!</p>}
+          {player1ShipsRemaining === 0 && (
+            <p className="my-modalBody-text">You Lose... </p>
+          )}
+          {player2ShipsRemaining === 0 && (
+            <p className="my-modalBody-text">You Win!</p>
+          )}
         </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleRestartGame}>
-            Play Again
-          </Button>
-        </Modal.Footer>
       </Modal>
     </div>
   );
