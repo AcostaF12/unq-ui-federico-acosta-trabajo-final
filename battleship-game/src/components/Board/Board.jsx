@@ -41,6 +41,7 @@ export const Board = ({ cells, isMyBoard, onClick, isPlayerTurn, gameStarted, ga
                     : "Empty"
                 }
                 onClick={() => onClick(colIndex, rowIndex)}
+                isMyBoard={isMyBoard}
               />
             ))}
           </div>

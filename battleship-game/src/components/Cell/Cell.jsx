@@ -1,6 +1,6 @@
 import "./Cell.css";
 
-export const Cell = ({ value, onClick }) => {
+export const Cell = ({ value, onClick, isMyBoard }) => {
   const hasShip = value === "Ship";
   const isMiss = value === "Miss";
   const isHit = value === "Hit";
@@ -9,8 +9,8 @@ export const Cell = ({ value, onClick }) => {
 
   const cellClasses = {
     myCell: true,
-    "my-cell-notHit": isEmpty,
-    "my-cell-ship": hasShip,
+    "my-cell-notHit": isEmpty || hasShip,
+    "my-cell-ship": hasShip && isMyBoard,
     "my-cell-miss": isMiss,
     "my-cell-hit": isHit,
     "my-cell-sunk": isSunk,
