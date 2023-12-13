@@ -13,7 +13,6 @@ Luego de descargar y descomprimir el proyecto, posicionarse en la carpeta root *
 En la terminal, ejecutar las siguientes instrucciones para instalar librerias y dependencias:
 - npm install
 - npm install react-bootstrap bootstrap
-- npm run build
 
 #### 2- 
 
